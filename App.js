@@ -245,7 +245,6 @@ export default function App() {
   });
 
   const [mapFullscreen, setMapFullscreen]       = useState(false);
-  const [panoramaVisible, setPanoramaVisible]   = useState(false);
   const [activeStep, setActiveStep]             = useState(null);
 
   // ── Animations ────────────────────────────────────────────────────────────
@@ -537,7 +536,6 @@ export default function App() {
           <TouchableOpacity
             style={styles.panoramaBtn}
             activeOpacity={0.85}
-            onPress={() => setPanoramaVisible(true)}
           >
             <LinearGradient
               colors={['#EA580C', '#F97316']}
@@ -653,7 +651,6 @@ export default function App() {
                         {step.hasPanorama && (
                           <TouchableOpacity
                             style={styles.stepPanoTag}
-                            onPress={() => setPanoramaVisible(true)}
                             activeOpacity={0.8}
                           >
                             <Text style={styles.stepPanoTagText}>360°</Text>
@@ -742,73 +739,6 @@ export default function App() {
         </View>
       </Modal>
 
-      {/* ── PANORAMA MODAL (placeholder) ────────────────────────────────────── */}
-      <Modal
-        visible={panoramaVisible}
-        animationType="slide"
-        statusBarTranslucent
-        onRequestClose={() => setPanoramaVisible(false)}
-      >
-        <View style={styles.panoRoot}>
-          <StatusBar barStyle="light-content" backgroundColor="#000" />
-
-          {/* Header */}
-          <View style={styles.panoHeader}>
-            <TouchableOpacity
-              style={styles.modalCloseBtn}
-              onPress={() => setPanoramaVisible(false)}
-              activeOpacity={0.8}
-            >
-              <IconClose size={20} color={C.white} />
-            </TouchableOpacity>
-            <Text style={styles.panoTitle}>360° Panoramic View</Text>
-            <Text style={styles.panoSub}>Acacia Hall Entrance</Text>
-          </View>
-
-          {/* Panorama placeholder */}
-          <View style={styles.panoViewport}>
-            <LinearGradient
-              colors={[C.maroonDark, C.maroon, C.maroonLight]}
-              start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
-              style={styles.panoPlaceholder}
-            >
-              <View style={styles.panoIconWrap}>
-                <IconPanorama size={52} color="rgba(255,255,255,0.5)" />
-              </View>
-              <Text style={styles.panoPlaceholderTitle}>360° View</Text>
-              <Text style={styles.panoPlaceholderSub}>
-                Panoramic images will render here.{'\n'}
-                Integrate with your 360° image library.
-              </Text>
-            </LinearGradient>
-          </View>
-
-          {/* Panorama thumbnails */}
-          <View style={styles.panoThumbs}>
-            <Text style={styles.panoThumbsLabel}>Available Views</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.panoThumbsRow}>
-              {['Acacia Hall\nEntrance', 'Fountain\nCourtyard', 'Ipil Building\nEntrance'].map((label, i) => (
-                <TouchableOpacity key={i} style={[
-                  styles.panoThumb,
-                  i === 0 && { borderColor: C.pinPanorama, borderWidth: 2 },
-                ]} activeOpacity={0.8}>
-                  <LinearGradient
-                    colors={[C.maroonDark, C.maroon]}
-                    style={styles.panoThumbGradient}
-                  >
-                    <Text style={styles.panoThumbText}>{label}</Text>
-                    <View style={styles.panoThumbBadge}>
-                      <Text style={styles.panoThumbBadgeText}>360°</Text>
-                    </View>
-                  </LinearGradient>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-        </View>
-      </Modal>
-
     </View>
   );
 }
@@ -858,14 +788,14 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontFamily: 'CormorantGaramond_700Bold',
-    fontSize: 22,
+    fontSize: 24,
     color: C.white,
     letterSpacing: 0.3,
     lineHeight: 25,
   },
   headerSub: {
     fontFamily: 'Montserrat_400Regular',
-    fontSize: 8,
+    fontSize: 9,
     color: 'rgba(201,169,110,0.85)',
     letterSpacing: 2,
     textTransform: 'uppercase',
@@ -1336,118 +1266,5 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center',
     paddingHorizontal: 20,
-  },
-
-  // ── Panorama modal ────────────────────────────────────────────────────────
-  panoRoot: {
-    flex: 1,
-    backgroundColor: '#0D0D0D',
-  },
-  panoHeader: {
-    paddingTop: Platform.OS === 'ios' ? 54 : 44,
-    paddingHorizontal: 20,
-    paddingBottom: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255,255,255,0.08)',
-  },
-  panoTitle: {
-    fontFamily: 'CormorantGaramond_700Bold',
-    fontSize: 22,
-    color: C.white,
-    letterSpacing: 0.3,
-    marginTop: 10,
-  },
-  panoSub: {
-    fontFamily: 'Montserrat_400Regular',
-    fontSize: 9,
-    color: C.pinPanorama,
-    letterSpacing: 1.5,
-    textTransform: 'uppercase',
-    marginTop: 2,
-  },
-  panoViewport: {
-    flex: 1,
-    margin: 16,
-    borderRadius: 20,
-    overflow: 'hidden',
-  },
-  panoPlaceholder: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 12,
-    padding: 30,
-  },
-  panoIconWrap: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    backgroundColor: 'rgba(255,255,255,0.08)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.12)',
-  },
-  panoPlaceholderTitle: {
-    fontFamily: 'CormorantGaramond_700Bold',
-    fontSize: 28,
-    color: C.white,
-    letterSpacing: 1,
-  },
-  panoPlaceholderSub: {
-    fontFamily: 'Montserrat_400Regular',
-    fontSize: 11.5,
-    color: 'rgba(255,255,255,0.5)',
-    textAlign: 'center',
-    lineHeight: 18,
-    letterSpacing: 0.3,
-  },
-  panoThumbs: {
-    paddingBottom: Platform.OS === 'ios' ? 34 : 20,
-    paddingHorizontal: 16,
-  },
-  panoThumbsLabel: {
-    fontFamily: 'Montserrat_600SemiBold',
-    fontSize: 9,
-    color: 'rgba(255,255,255,0.4)',
-    letterSpacing: 2,
-    textTransform: 'uppercase',
-    marginBottom: 10,
-  },
-  panoThumbsRow: {
-    gap: 10,
-  },
-  panoThumb: {
-    width: 110,
-    height: 70,
-    borderRadius: 12,
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
-  },
-  panoThumbGradient: {
-    flex: 1,
-    padding: 10,
-    justifyContent: 'space-between',
-  },
-  panoThumbText: {
-    fontFamily: 'Montserrat_600SemiBold',
-    fontSize: 9.5,
-    color: C.white,
-    letterSpacing: 0.3,
-    lineHeight: 13,
-  },
-  panoThumbBadge: {
-    backgroundColor: C.pinPanorama,
-    alignSelf: 'flex-start',
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
-  },
-  panoThumbBadgeText: {
-    fontFamily: 'Montserrat_700Bold',
-    fontSize: 7.5,
-    color: C.white,
-    letterSpacing: 0.5,
   },
 });
